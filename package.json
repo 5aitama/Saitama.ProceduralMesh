@@ -1,0 +1,21 @@
+{
+  "name": "com.5aitama.proceduralmesh",
+  "version": "0.0.1",
+  "displayName": "Procedural Mesh",
+  "description": "Easly create & manage procedural mesh",
+  "unity": "2019.3",
+  "unityRelease": "7f1",
+  "dependencies": {
+    "com.unity.collections": "0.7.0-preview.2",
+    "com.unity.mathematics": "1.1.0"
+  },
+  "keywords": [
+    "Procedural",
+    "Mesh"
+  ],
+  "author": {
+    "name": "5aitama",
+    "email": "alex.sb@icloud.com",
+    "url": "https://twitter.com/5aitama1"
+  }
+}
