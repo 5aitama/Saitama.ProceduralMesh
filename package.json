@@ -7,9 +7,10 @@
   "unityRelease": "1f1",
   "dependencies": {
     "com.unity.mathematics": "1.1.0",
-    "com.unity.test-framework": "1.1.14",
     "com.unity.collections": "0.9.0-preview.6",
-    "com.unity.entities": "0.11.1-preview.4"
+    "com.unity.entities": "0.11.1-preview.4",
+    "com.unity.jobs": "0.2.10-preview.12",
+    "com.unity.burst": "1.3.2"
   },
   "keywords": [
     "Saitama",
