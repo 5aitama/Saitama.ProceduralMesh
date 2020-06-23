@@ -10,7 +10,7 @@ You can use this library in your Unity game by using the `Package Manager` and s
 
 ```C#
 using Unity.Mathematics;
-using Saitama.Mathematics;
+using Saitama.ProceduralMesh;
 
 namespace MyNamespace
 {
