@@ -1,6 +1,6 @@
 {
   "name": "com.saitama.proceduralmesh",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "displayName": "Saitama Procedural Mesh",
   "description": "Set of help procedural mesh methods",
   "unity": "2019.4",
@@ -24,5 +24,6 @@
     "email": "alx.sb@icloud.com",
     "url": "https://www.unity3d.com"
   },
-  "hideInEditor": false
+  "hideInEditor": false,
+  "type": "library"
 }
