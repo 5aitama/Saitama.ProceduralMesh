@@ -1,6 +1,6 @@
 # Saitama.ProceduralMesh
 
-A C# library provide set of functions that help to create easly mesh.
+A C# library provide set of functions that help you to create mesh easly.
 
 The main goal is to deliver functions that I use a lot and that are very useful in my procedural generation projects.
 
