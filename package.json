@@ -1,22 +1,27 @@
 {
-  "name": "com.5aitama.proceduralmesh",
-  "version": "0.0.1",
-  "displayName": "Procedural Mesh",
-  "description": "Easly create & manage procedural mesh",
-  "unity": "2019.3",
-  "unityRelease": "7f1",
+  "name": "com.saitama.proceduralmesh",
+  "version": "1.0.0",
+  "displayName": "Saitama Procedural Mesh",
+  "description": "Set of help procedural mesh methods",
+  "unity": "2019.4",
+  "unityRelease": "1f1",
   "dependencies": {
-    "com.unity.collections": "0.7.0-preview.2",
     "com.unity.mathematics": "1.1.0",
-    "com.unity.entities": "0.8.0-preview.8"
+    "com.unity.test-framework": "1.1.14",
+    "com.unity.collections": "0.9.0-preview.6",
+    "com.unity.entities": "0.11.1-preview.4"
   },
   "keywords": [
+    "Saitama",
+    "5aitama",
     "Procedural",
-    "Mesh"
+    "Mesh",
+    "Geometry"
   ],
   "author": {
-    "name": "5aitama",
-    "email": "alex.sb@icloud.com",
-    "url": "https://twitter.com/5aitama1"
-  }
+    "name": "5aitma",
+    "email": "alx.sb@icloud.com",
+    "url": "https://www.unity3d.com"
+  },
+  "hideInEditor": false
 }
