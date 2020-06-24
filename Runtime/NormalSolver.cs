@@ -12,10 +12,86 @@ using UnityEngine;
 using Unity.Collections;
 using Unity.Mathematics;
 
+using Unity.Jobs;
+using Unity.Burst;
+
 namespace Saitama.ProceduralMesh
 {
     public static class NormalSolver
     {
+        [BurstCompile]
+        public struct RecalculateNormalsJob : IJob
+        {
+            [ReadOnly]
+            public float angle;
+
+            [ReadOnly]
+            public NativeArray<Triangle> tris;
+
+            public NativeArray<Vertex> vert;
+
+            public void Execute()
+            {
+                 var cosineThreshold = Mathf.Cos(angle * Mathf.Deg2Rad);
+                var triNormals = new NativeArray<float3>(tris.Length, Allocator.Temp);
+                var dictionary = new NativeMultiHashMap<VertexKey, VertexEntry>(vert.Length * 2, Allocator.Temp);
+
+                for(var i = 0; i < tris.Length; i++)
+                {
+                    var i1 = tris[i].indices[0];
+                    var i2 = tris[i].indices[1];
+                    var i3 = tris[i].indices[2];
+
+                    // Calculate the normal of the triangle
+                    var p1 = vert[i2].pos - vert[i1].pos;
+                    var p2 = vert[i3].pos - vert[i1].pos;
+                    var normal = math.normalize(math.cross(p1, p2));
+
+                    triNormals[i] = normal;
+                    
+                    dictionary.Add(new VertexKey(vert[i1].pos), new VertexEntry(0, i, i1));
+                    dictionary.Add(new VertexKey(vert[i2].pos), new VertexEntry(0, i, i2));
+                    dictionary.Add(new VertexKey(vert[i3].pos), new VertexEntry(0, i, i3));
+                }
+
+                var keys = dictionary.GetKeyArray(Allocator.Temp);
+
+                for(var i = 0; i < keys.Length; i++)
+                {
+                    var enumerator1 = dictionary.GetValuesForKey(keys[i]);
+                    do
+                    {
+                        var sum = new float3();
+                        var lhs = enumerator1.Current;
+                        var enumerator2 = dictionary.GetValuesForKey(keys[i]);
+                        do
+                        {
+                            var rhs = enumerator2.Current;
+
+                            if (lhs.VertexIndex == rhs.VertexIndex) 
+                                sum += triNormals[rhs.TriangleIndex];
+                            else 
+                            {
+                                // The dot product is the cosine of the angle between the two triangles.
+                                // A larger cosine means a smaller angle.
+                                var dot = math.dot(triNormals[lhs.TriangleIndex], triNormals[rhs.TriangleIndex]);
+
+                                if (dot >= cosineThreshold)
+                                    sum += triNormals[rhs.TriangleIndex];
+                            }
+                        } while(enumerator2.MoveNext());
+
+                        var v = vert[lhs.VertexIndex];
+                        v.norm = math.normalize(sum);
+                        vert[lhs.VertexIndex] = v;
+
+                        //vert[lhs.VertexIndex].norm = math.normalize(sum);
+
+                    } while(enumerator1.MoveNext());
+                }
+            }
+        }
+
         /// <summary>
         /// Smooth mesh.
         /// </summary>
