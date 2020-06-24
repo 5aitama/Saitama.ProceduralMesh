@@ -1,5 +1,8 @@
 # Saitama.ProceduralMesh
 
+![GitHub package.json version (branch)](https://img.shields.io/github/package-json/v/5aitama/Saitama.ProceduralMesh/master?label=master&color=green)
+![GitHub package.json version (branch)](https://img.shields.io/github/package-json/v/5aitama/Saitama.ProceduralMesh/development?label=development&color=orange)
+
 A C# library provide set of functions that help you to create/update mesh easily with DOTS.
 
 The main goal is to deliver functions that I use a lot and that are very useful in my procedural generation projects.
