@@ -137,8 +137,7 @@ namespace Saitama.ProceduralMesh
                         }
                     } while(enumerator2.MoveNext());
                     
-                    vert[lhs.VertexIndex].norm = math.normalize(sum);
-                    //normals[lhs.VertexIndex] = math.normalize(sum);
+                    normals[lhs.VertexIndex] = math.normalize(sum);
 
                 } while(enumerator1.MoveNext());
             }
