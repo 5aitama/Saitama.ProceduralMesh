@@ -32,9 +32,9 @@ namespace Saitama.ProceduralMesh
             {
                 Vertices[index] = new SVertex 
                 {
-                    pos     = PosArray[index],
-                    norm    = NormArray[index],
-                    uv      = UVArray[index],
+                    pos     = PosArray  [index],
+                    norm    = NormArray [index],
+                    uv      = UVArray   [index],
                 };
             }
         }
@@ -61,9 +61,9 @@ namespace Saitama.ProceduralMesh
             {
                 Vertices[index] = new Vertex 
                 {
-                    pos     = PosArray[index],
-                    norm    = NormArray[index],
-                    uv      = UVArray[index],
+                    pos     = PosArray  [index],
+                    norm    = NormArray [index],
+                    uv      = UVArray   [index],
                     col     = ColorArray[index],
                 };
             }
@@ -75,11 +75,14 @@ namespace Saitama.ProceduralMesh
             [ReadOnly]
             public NativeArray<float3> NormArray;
             
-            [WriteOnly]
             public NativeArray<Vertex> VertArray;
 
             public void Execute(int index)
-                => VertArray[index].norm = NormArray[index];
+            {
+                var v = VertArray   [index];
+                v.norm = NormArray  [index];
+                VertArray[index] = v;
+            }
         }
 
         /// <summary>
@@ -196,7 +199,7 @@ namespace Saitama.ProceduralMesh
         /// <param name="triangles">New triangle array</param>
         /// <param name="vertices">New vertex array</param>
         /// <param name="normals">New normals array</param>
-        public static Update(this Mesh mesh, in NativeArray<Triangle> triangles, NativeArray<Vertex> vertices, in NativeArray<float3> normals)
+        public static void Update(this Mesh mesh, in NativeArray<Triangle> triangles, NativeArray<Vertex> vertices, in NativeArray<float3> normals)
         {
             new MergeVertexNormalJob
             {
