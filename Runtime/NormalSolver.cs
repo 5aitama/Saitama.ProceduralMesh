@@ -72,8 +72,12 @@ namespace Saitama.ProceduralMesh
                                 sum += triNormals[rhs.TriangleIndex];
                         }
                     } while(enumerator2.MoveNext());
-                    
-                    vert[lhs.VertexIndex].norm = math.normalize(sum);
+
+                    var v = vert[lhs.VertexIndex];
+                    v.norm = math.normalize(sum);
+                    vert[lhs.VertexIndex] = v;
+
+                    //vert[lhs.VertexIndex].norm = math.normalize(sum);
 
                 } while(enumerator1.MoveNext());
             }
