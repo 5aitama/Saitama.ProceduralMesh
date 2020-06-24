@@ -14,32 +14,6 @@ namespace Saitama.ProceduralMesh
     public static class PMesh
     {
         [BurstCompile]
-        private struct ToSVertexArrayJob : IJobParallelFor
-        {
-            [ReadOnly]
-            public NativeArray<float3> PosArray;
-
-            [ReadOnly]
-            public NativeArray<float3> NormArray;
-
-            [ReadOnly]
-            public NativeArray<float2> UVArray;
-
-            [WriteOnly]
-            public NativeArray<SVertex> Vertices;
-
-            public void Execute(int index)
-            {
-                Vertices[index] = new SVertex 
-                {
-                    pos     = PosArray  [index],
-                    norm    = NormArray [index],
-                    uv      = UVArray   [index],
-                };
-            }
-        }
-
-        [BurstCompile]
         private struct ToVertexArrayJob : IJobParallelFor
         {
             [ReadOnly]
@@ -49,10 +23,7 @@ namespace Saitama.ProceduralMesh
             public NativeArray<float3> NormArray;
 
             [ReadOnly]
-            public NativeArray<float2> UVArray;
-
-            [ReadOnly]
-            public NativeArray<float3> ColorArray;
+            public NativeArray<float4> ColorArray;
 
             [WriteOnly]
             public NativeArray<Vertex> Vertices;
@@ -63,66 +34,22 @@ namespace Saitama.ProceduralMesh
                 {
                     pos     = PosArray  [index],
                     norm    = NormArray [index],
-                    uv      = UVArray   [index],
                     col     = ColorArray[index],
                 };
             }
         }
-        
-        [BurstCompile]
-        private struct MergeVertexNormalJob : IJobParallelFor
-        {
-            [ReadOnly]
-            public NativeArray<float3> NormArray;
-            
-            public NativeArray<Vertex> VertArray;
-
-            public void Execute(int index)
-            {
-                var v = VertArray   [index];
-                v.norm = NormArray  [index];
-                VertArray[index] = v;
-            }
-        }
 
         /// <summary>
-        /// Create simple vertex array from 3 separate array (positions, normals, uvs).
-        /// </summary>
-        /// <param name="vertices">Vertex array created</param>
-        /// <param name="p">Array that contains position of each vertex</param>
-        /// <param name="n">Array that contains normal of each vertex</param>
-        /// <param name="u">Array that contains texture coordinate of each vertex</param>
-        /// <param name="allocator">Allocator of the vertex array</param>
-        /// <param name="options">Option of the vertex array</param>
-        /// <param name="previousJob">Previous job</param>
-        public static JobHandle ToSVertexArray(out NativeArray<SVertex> vertices, NativeArray<float3> p, NativeArray<float3> n, NativeArray<float2> u, Allocator allocator, NativeArrayOptions options = NativeArrayOptions.ClearMemory, JobHandle previousJob = default)
-        {
-            if(p.Length != n.Length)
-                throw new System.Exception("position and normal array must be have same size!");
-
-            vertices = new NativeArray<SVertex>(p.Length, allocator, options);
-
-            return new ToSVertexArrayJob
-            {
-                PosArray    = p,
-                NormArray   = n,
-                UVArray     = u,
-                Vertices    = vertices,
-            }.Schedule(vertices.Length, 64, previousJob);
-        }
-
-        /// <summary>
-        /// Create vertex array from 4 separate array (positions, normals, uvs, colors).
+        /// Create vertex array from 3 separate array (positions, normals, colors).
         /// </summary>
         /// <param name="vertices">Vertex array created</param>
         /// <param name="p">Array that contains position of each vertex</param>
         /// <param name="n">Array that contains normal vector of each vertex</param>
-        /// <param name="u">Array that contains texture coordinate of each vertex</param>
         /// <param name="c">Array that contains color of each vertex</param>
         /// <param name="allocator">Allocator of the vertex array</param>
         /// <param name="options">Option of the vertex array</param>
         /// <param name="previousJob">Previous job</param>
-        public static JobHandle ToVertexArray(out NativeArray<Vertex> vertices, NativeArray<float3> p, NativeArray<float3> n, NativeArray<float2> u, NativeArray<float3> c, Allocator allocator, NativeArrayOptions options = NativeArrayOptions.ClearMemory, JobHandle previousJob = default)
+        public static JobHandle ToVertexArray(out NativeArray<Vertex> vertices, NativeArray<float3> p, NativeArray<float3> n, NativeArray<float4> c, Allocator allocator, NativeArrayOptions options = NativeArrayOptions.ClearMemory, JobHandle previousJob = default)
         {
             if(p.Length != n.Length)
                 throw new System.Exception("position and normal array must be have same size!");
@@ -133,7 +60,6 @@ namespace Saitama.ProceduralMesh
             {
                 PosArray    = p,
                 NormArray   = n,
-                UVArray     = u,
                 ColorArray  = c,
                 Vertices    = vertices,
             }.Schedule(vertices.Length, 64, previousJob);
@@ -190,26 +116,6 @@ namespace Saitama.ProceduralMesh
             mesh.SetSubMesh(0, new SubMeshDescriptor(0, triangles.Length * 3, MeshTopology.Triangles));
 
             mesh.RecalculateBounds();
-        }
-        
-        /// <summary>
-        /// Update Mesh with new geometry
-        /// </summary>
-        /// <param name="mesh">Mesh to be update</param>
-        /// <param name="triangles">New triangle array</param>
-        /// <param name="vertices">New vertex array</param>
-        /// <param name="normals">New normals array</param>
-        public static void Update(this Mesh mesh, in NativeArray<Triangle> triangles, NativeArray<Vertex> vertices, in NativeArray<float3> normals)
-        {
-            new MergeVertexNormalJob
-            {
-                NormArray = normals,
-                VertArray = vertices,
-            }
-            .Schedule(vertices.Length, 64)
-            .Complete();
-            
-            Update(mesh, triangles, vertices);
         }
 
         /// <summary>
