@@ -32,9 +32,9 @@ namespace Saitama.ProceduralMesh
             {
                 Vertices[index] = new SVertex 
                 {
-                    pos     = PosArray[index],
-                    norm    = NormArray[index],
-                    uv      = UVArray[index],
+                    pos     = PosArray  [index],
+                    norm    = NormArray [index],
+                    uv      = UVArray   [index],
                 };
             }
         }
@@ -61,11 +61,27 @@ namespace Saitama.ProceduralMesh
             {
                 Vertices[index] = new Vertex 
                 {
-                    pos     = PosArray[index],
-                    norm    = NormArray[index],
-                    uv      = UVArray[index],
+                    pos     = PosArray  [index],
+                    norm    = NormArray [index],
+                    uv      = UVArray   [index],
                     col     = ColorArray[index],
                 };
+            }
+        }
+        
+        [BurstCompile]
+        private struct MergeVertexNormalJob : IJobParallelFor
+        {
+            [ReadOnly]
+            public NativeArray<float3> NormArray;
+            
+            public NativeArray<Vertex> VertArray;
+
+            public void Execute(int index)
+            {
+                var v = VertArray   [index];
+                v.norm = NormArray  [index];
+                VertArray[index] = v;
             }
         }
 
@@ -174,6 +190,26 @@ namespace Saitama.ProceduralMesh
             mesh.SetSubMesh(0, new SubMeshDescriptor(0, triangles.Length * 3, MeshTopology.Triangles));
 
             mesh.RecalculateBounds();
+        }
+        
+        /// <summary>
+        /// Update Mesh with new geometry
+        /// </summary>
+        /// <param name="mesh">Mesh to be update</param>
+        /// <param name="triangles">New triangle array</param>
+        /// <param name="vertices">New vertex array</param>
+        /// <param name="normals">New normals array</param>
+        public static void Update(this Mesh mesh, in NativeArray<Triangle> triangles, NativeArray<Vertex> vertices, in NativeArray<float3> normals)
+        {
+            new MergeVertexNormalJob
+            {
+                NormArray = normals,
+                VertArray = vertices,
+            }
+            .Schedule(vertices.Length, 64)
+            .Complete();
+            
+            Update(mesh, triangles, vertices);
         }
 
         /// <summary>
