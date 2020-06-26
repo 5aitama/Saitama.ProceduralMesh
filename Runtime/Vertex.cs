@@ -11,7 +11,7 @@ namespace Saitama.ProceduralMesh
     /// Slim vertex (without color).
     /// </summary>
     [StructLayout(LayoutKind.Sequential), InternalBufferCapacity(8)]
-    public struct SVertex
+    public struct SVertex : IBufferElementData
     {   
         /// <summary>
         /// Vertex position
@@ -44,7 +44,7 @@ namespace Saitama.ProceduralMesh
     /// Basic vertex.
     /// </summary>
     [StructLayout(LayoutKind.Sequential), InternalBufferCapacity(8)]
-    public struct Vertex
+    public struct Vertex : IBufferElementData
     {
         /// <summary>
         /// Vertex position
