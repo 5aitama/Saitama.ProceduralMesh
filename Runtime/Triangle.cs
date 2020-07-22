@@ -1,8 +1,9 @@
-﻿using Unity.Mathematics;
+using Unity.Mathematics;
+using Unity.Entities;
 
 namespace Saitama.ProceduralMesh
 {
-    public struct Triangle
+    public struct Triangle : IBufferElementData
     {
         public int3 indices;
 

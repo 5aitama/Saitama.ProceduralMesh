@@ -10,8 +10,8 @@ namespace Saitama.ProceduralMesh
     /// <summary>
     /// Slim vertex (without color).
     /// </summary>
-    [StructLayout(LayoutKind.Sequential), InternalBufferCapacity(8)]
-    public struct SVertex : IBufferElementData
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Vertex : IBufferElementData
     {   
         /// <summary>
         /// Vertex position
@@ -26,7 +26,7 @@ namespace Saitama.ProceduralMesh
         /// <summary>
         /// Vertex texture coordinate
         /// </summary>
-        public float2 uv;
+        public float2 uv0;
 
         public static NativeArray<VertexAttributeDescriptor> Descriptors(Allocator allocator)
         {
@@ -43,8 +43,8 @@ namespace Saitama.ProceduralMesh
     /// <summary>
     /// Basic vertex.
     /// </summary>
-    [StructLayout(LayoutKind.Sequential), InternalBufferCapacity(8)]
-    public struct Vertex : IBufferElementData
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ColorVertex : IBufferElementData
     {
         /// <summary>
         /// Vertex position
@@ -55,11 +55,6 @@ namespace Saitama.ProceduralMesh
         /// Vertex normal
         /// </summary>
         public float3 norm;
-        
-        /// <summary>
-        /// Vertex texture coordinate
-        /// </summary>
-        /// public float2 uv;
 
         /// <summary>
         /// Vertex color
