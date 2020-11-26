@@ -1,16 +1,16 @@
 {
   "name": "com.saitama.proceduralmesh",
-  "version": "3.2.2",
+  "version": "3.3.2",
   "displayName": "Saitama Procedural Mesh",
   "description": "Set of help procedural mesh methods",
   "unity": "2020.1",
-  "unityRelease": "3f1",
+  "unityRelease": "14f1",
   "dependencies": {
     "com.unity.mathematics": "1.2.1",
-    "com.unity.collections": "0.12.0-preview.13",
-    "com.unity.entities": "0.14.0-preview.18",
-    "com.unity.jobs": "0.5.0-preview.14",
-    "com.unity.burst": "1.3.6"
+    "com.unity.collections": "0.9.0-preview.6",
+    "com.unity.entities": "0.14.0-preview.19",
+    "com.unity.jobs": "0.7.0-preview.17",
+    "com.unity.burst": "1.4.1"
   },
   "keywords": [
     "Saitama",
